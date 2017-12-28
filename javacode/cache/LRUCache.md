@@ -1,4 +1,5 @@
 ## LRUCache Base on LinkedHashMap
+
 ```
 import java.util.Collection;
 import java.util.LinkedHashMap;
