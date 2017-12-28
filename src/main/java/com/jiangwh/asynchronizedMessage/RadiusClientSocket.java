@@ -1,5 +1,7 @@
+package com.jiangwh.asynchronizedMessage;
 
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 
 
@@ -11,25 +13,23 @@ public class RadiusClientSocket {
 	public RadiusClientSocket(int port) {
 		this.port = port;
 		try {
-			InetAddress ipv4 = InetAddress.getByName(SystemUtil.getBindAddress());// 直接绑定配置的服务器IP
+			InetAddress ipv4 = Inet4Address.getLocalHost();
 			this.datagramSocket = new DatagramSocket(port, ipv4);
 
 		} catch (Exception e) {
-			RgsplLogger.error(e);
-
+			
 		}
 	}
 
 	public RadiusClientSocket() {
 		Integer port = 3930;
 		int i = 0;
-		for (i = 0; i < 10; i++) {// 初始端口为3930,沖撞十次,即是3930-3939,如果都被占用,则无法启动
+		for (i = 0; i < 10; i++) {
 			try {
-				InetAddress ipv4 = InetAddress.getByName(SystemUtil.getBindAddress());// 直接绑定配置的服务器IP
+				InetAddress ipv4 = Inet4Address.getLocalHost();
 				this.datagramSocket = new DatagramSocket(port, ipv4);
 				break;
 			} catch (Exception e) {
-				RgsplLogger.error(e);
 				port++;
 			}
 		}

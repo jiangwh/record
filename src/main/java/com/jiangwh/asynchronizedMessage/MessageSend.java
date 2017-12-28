@@ -1,3 +1,4 @@
+package com.jiangwh.asynchronizedMessage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -10,12 +11,10 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.concurrent.BlockingQueue;
 
-import org.apache.log4j.Logger;
 
 
 public class MessageSend {
 
-	private Logger logger = Logger.getLogger(MessageSend.class);
 	
 	public DatagramPacket send(DatagramPacket datagramPacket,long timeOut,int tryNum)
 			throws InterruptedException, TimeOutException {
@@ -27,7 +26,7 @@ public class MessageSend {
 			try {
 				res = doSend(messageObject, datagramPacket,timeOut);
 			} catch (Exception e) {
-				logger.error(e);
+				
 			}
 		}
 		return res;
@@ -71,7 +70,7 @@ public class MessageSend {
 				res = doSend(messageObject, datagramPacket);
 				//check response
 			} catch (Exception e) {
-				logger.error(e);
+				
 			}
 		}
 		return res;
@@ -158,7 +157,7 @@ public class MessageSend {
 				int identifier = bais.read();
 				int length = bais.read() << 8 | bais.read();
 				byte[] authenticator = new byte[16];
-				byte[] attributes = new byte[length - RadiusStandard.RADIUS_HEADER_LENGTH];
+				byte[] attributes = new byte[length - 32];
 				bais.read(authenticator);
 				bais.read(attributes);
 				Packet packet = new Packet();

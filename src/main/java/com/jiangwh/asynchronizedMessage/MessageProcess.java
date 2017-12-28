@@ -1,3 +1,4 @@
+package com.jiangwh.asynchronizedMessage;
 
 public class MessageProcess {
 

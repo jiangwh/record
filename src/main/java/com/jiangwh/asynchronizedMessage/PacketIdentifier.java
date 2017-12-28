@@ -1,3 +1,4 @@
+package com.jiangwh.asynchronizedMessage;
 import java.util.ArrayList;
 import java.util.List;
 

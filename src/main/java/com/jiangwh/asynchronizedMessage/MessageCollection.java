@@ -1,3 +1,4 @@
+package com.jiangwh.asynchronizedMessage;
 import java.util.Hashtable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
