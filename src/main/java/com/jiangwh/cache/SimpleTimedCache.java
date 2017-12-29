@@ -1,7 +1,5 @@
-## SimpleTimedCache 
-   Bad Way~
+package com.jiangwh.cache;
 
-```
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,24 +9,27 @@ import java.util.Map.Entry;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SimpleTimedCache<K, V> {
-	private long timeout = 3600000;	
+	private long timeout = 3600000;
 	private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-	private Map<K, CacheEntry> entryMap;	
+	private Map<K, CacheEntry> entryMap;
 	private TimeIndex timeIndex = new TimeIndex();
+
 	public SimpleTimedCache() {
 		this(10000, 3600000);
 	}
+
 	public SimpleTimedCache(int initialSize, long timeout) {
 		this.timeout = timeout;
 		entryMap = new HashMap<K, CacheEntry>(initialSize);
 	}
+
 	public void put(K key, V value) {
 		clearExpiredEntry();
 		long now = System.currentTimeMillis();
 		lock.writeLock().lock();
 		try {
 			CacheEntry e = entryMap.get(key);
-			//构建有序链表
+			// 鏋勫缓鏈夊簭閾捐〃
 			if (e == null) {
 				e = new CacheEntry(key, value, now);
 				entryMap.put(key, e);
@@ -43,7 +44,6 @@ public class SimpleTimedCache<K, V> {
 			lock.writeLock().unlock();
 		}
 	}
-
 
 	public int size() {
 		return entryMap.size();
@@ -145,7 +145,7 @@ public class SimpleTimedCache<K, V> {
 		CacheEntry tail;
 
 		void remove(CacheEntry e) {
-			// 如果是头或尾，移动头、尾指针
+			// 濡傛灉鏄ご鎴栧熬锛岀Щ鍔ㄥご銆佸熬鎸囬拡
 			if (e == head) {
 				head = e.next;
 			}
@@ -153,7 +153,7 @@ public class SimpleTimedCache<K, V> {
 				tail = e.prev;
 			}
 
-			// 把e从链表中删除
+			// 鎶奺浠庨摼琛ㄤ腑鍒犻櫎
 			if (e.prev != null)
 				e.prev.next = e.next;
 			if (e.next != null)
@@ -230,6 +230,7 @@ public class SimpleTimedCache<K, V> {
 
 		@Override
 		public boolean equals(Object obj) {
+			@SuppressWarnings("unchecked")
 			CacheEntry other = (CacheEntry) obj;
 			return key.equals(other.key);
 		}
@@ -240,4 +241,3 @@ public class SimpleTimedCache<K, V> {
 		}
 	}
 }
-```

@@ -1,13 +1,5 @@
+package com.jiangwh.cache;
 
-## TimeCacheMap
-
-```
-/**
-*	Êı¾İ½á¹¹Ö÷ÒªÊÇÓÃLinkedList & MapµÄ½á¹¹£¬ À´´æ´¢»º´æ¶ÔÏó¡£
-*	ÀûÓÃ¶¨ÊÇÈÎÎñ£¨±¾´úÂëÖĞÊ¹ÓÃThread.sleepÒ²¿ÉÒÔÊ¹ÓÃtimerµÄ¶¨Ê±ÈÎÎñ£©À´¶¨Ê±É¾³ıÁ´±íÎ²²¿µÄMapÔö¼ÓÁ´±íÊ×²¿µÄMap
-*	Ïà±ÈÖ®Ç°Ê¹ÓÃ µ¥´¿Ê¹ÓÃMap || Queue Í¨¹ı±ãÀûµÄ·½Ê½É¾³ı³¬Ê±¶ÔÏó£¬´ó´óÌá¸ßÁË´úÂëµÄĞ§ÂÊ
-*	The TimeCacheMap
-*/
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,10 +8,10 @@ import java.util.Map.Entry;
 
 public class TimeCacheMap<K, V> {
 	// this default ensures things expire at most 50% past the expiration time
-	//³õÊ¼»¯¶ÔÏóMap
+	//åˆå§‹åŒ–å¯¹è±¡Map
 	private static final int DEFAULT_NUM_BUCKETS = 3; 
 
-	//³¬Ê±¶ÔÏó,»Øµ÷½Ó¿Ú£¬ÒÔ±ã´¦ÀíÉ¾³ıÊÂ¼ş
+	//è¶…æ—¶å¯¹è±¡,å›è°ƒæ¥å£ï¼Œä»¥ä¾¿å¤„ç†åˆ é™¤äº‹ä»¶
 	public static interface ExpiredCallback<K, V> {
 		public void expire(K key, V val);
 	}
@@ -137,4 +129,3 @@ public class TimeCacheMap<K, V> {
 		_cleaner.interrupt();
 	}
 }
-```

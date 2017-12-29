@@ -1,6 +1,5 @@
-## LRUCache Base on LinkedHashMap
+package com.jiangwh.cache;
 
-```
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
