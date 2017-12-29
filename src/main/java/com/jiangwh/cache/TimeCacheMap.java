@@ -20,7 +20,7 @@ public class TimeCacheMap<K, V> {
 
 	private final Object _lock = new Object();
 	private Thread _cleaner;
-	private ExpiredCallback _callback;
+	private ExpiredCallback<K, V> _callback;
 
 	public TimeCacheMap(int expirationSecs, int numBuckets, ExpiredCallback<K, V> callback) {
 		if (numBuckets < 2) {
