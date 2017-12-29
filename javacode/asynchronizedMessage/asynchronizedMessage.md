@@ -1,6 +1,7 @@
 # 网络通信过程一种消息的处理机制
 ## 目前通过waiting方式来等待消息结果，可以改造通过callback机制完成
-======================================================================
+
+###code sample as below:
 
 * [<a href=../../src/main/java/com/jiangwh/asynchronizedMessage/MessageCallBack.java>MessageCallBack.java</a>]
 * [<a href=../../src/main/java/com/jiangwh/asynchronizedMessage/MessageCollection.java>MessageCollection.java</a>]
