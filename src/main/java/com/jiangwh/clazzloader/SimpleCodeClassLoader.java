@@ -1,14 +1,16 @@
 package com.jiangwh.clazzloader;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -145,10 +147,22 @@ public class SimpleCodeClassLoader {
 						urlClassLoader.loadClass(name, inner);
 					}
 				}
+				
 				clazz = urlClassLoader.loadClass(fullClassName, jco);
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
+			}catch(NoClassDefFoundError classDefFoundError){
+				//根据错误进行重新加载类
+				String message = classDefFoundError.getMessage();
+				String regex = "^(?:.*)(?:\\(wrong\\s+name:)(.*)(?:\\))$";
+				Matcher matcher = Pattern.compile(regex).matcher(message);
+				if(matcher.find()){
+					fullClassName = matcher.group(1).replaceAll("\\/", ".").trim();
+					clazz = urlClassLoader.loadClass(fullClassName, jco);
+				}
+				
+			}
+			finally {
 				if (urlClassLoader != null) {
 					urlClassLoader.close();
 				}
@@ -178,48 +192,24 @@ public class SimpleCodeClassLoader {
 	}
 
 	public static String findPackage(String sourceCode) throws IOException {
-		BufferedReader br = new BufferedReader(new StringReader(sourceCode));
-		try {
-			String temp = null;
-			while ((temp = br.readLine()) != null) {
-				if (isBlank(temp)) {
-					continue;
-				}
-				if (temp.trim().startsWith("package ")) {
-					temp = temp.split("[\\s+?;]")[1];
-					return temp;
-				} else {
-					return null;
-				}
-			}
-
-			return null;
-		} finally {
-			if (br != null) {
-				br.close();
-			}
+		//格式化成一行
+		sourceCode = sourceCode.replace("\n", "");
+		Matcher matcher = Pattern.compile("^(?:.*)(package.*\\..*;)(?:import.*;?)(?:.*public\\s+class.*)(?:.*)$")
+				.matcher(sourceCode);
+		if (matcher.find()) {
+			return matcher.group(1).replace("package", "").replace(";", "").trim();
+		} else {
+			return "";
 		}
 	}
 
 	public static String findClassName(String sourceCode) {
-
-		try (BufferedReader br = new BufferedReader(new StringReader(sourceCode))) {
-			String temp = null;
-
-			while ((temp = br.readLine()) != null) {
-				if (isBlank(temp)) {
-					continue;
-				}
-				Matcher matcher = Pattern.compile("^(.*)(public\\s+?class\\s+?)(.*?)(\\{.*)$").matcher(temp);
-				if (matcher.find()) {
-					return matcher.group(3).trim();
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		sourceCode = sourceCode.replace("\n", "");
+		Matcher matcher = Pattern.compile("^(?:.*)(?:public\\s+class)(.+)(\\{.*public.*)(\\{.*)$").matcher(sourceCode);
+		if (matcher.find()) {
+			return matcher.group(1).trim();
+		} else
+			return "";
 	}
 
 	public static boolean isBlank(CharSequence cs) {
@@ -238,8 +228,37 @@ public class SimpleCodeClassLoader {
 	public static void main(String[] args) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, InstantiationException, NoSuchMethodException, SecurityException {
 		String code = "package com.test; public class     Test {public static void main(String[] args) {String hello = \"Hello World!!!\";System.out.println(hello);}}";
+		String path = "/Users/jiangwh/work/note/record/src/main/java/Test.java";
+		path = "/Users/jiangwh/work/note/record/src/main/java/com/jiangwh/test/Test.java";
+		code = readStrFromFile(path);
 		String className = findPackage(code).concat(".").concat(findClassName(code));
+		className = className.startsWith(".") ? className.substring(1) : className;
 		Class<?> clazz = new SimpleCodeClassLoader().loadJavaCode(className, code);
+		System.out.println(clazz);
 		SimpleReflect.invoke(clazz, clazz.getMethod("main", String[].class), (Object) new String[] {});
+	}
+
+	public static String readStrFromFile(String path) throws IOException {
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(new File(path));
+			byte[] b = new byte[1];
+			ByteBuffer buffer = ByteBuffer.allocate(1024 * 10);
+			buffer.clear();
+			while (-1 != inputStream.read(b, 0, b.length)) {
+				buffer.put(b);
+			}
+			int size = buffer.position();
+			byte[] cb = new byte[size];
+			buffer.flip();
+			System.arraycopy(buffer.array(), 0, cb, 0, size);
+			return new String(cb);
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			if (null != inputStream) {
+				inputStream.close();
+			}
+		}
 	}
 }
