@@ -149,7 +149,7 @@ public class SimpleCodeClassLoader {
 				}
 				
 				clazz = urlClassLoader.loadClass(fullClassName, jco);
-			} catch (Exception e) {
+			}catch (Exception e) {
 				e.printStackTrace();
 			}catch(NoClassDefFoundError classDefFoundError){
 				//根据错误进行重新加载类
