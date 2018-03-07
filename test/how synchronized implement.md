@@ -1,6 +1,6 @@
-# synchronized实现原理
-站在使用者的角度查看synchronized的原理
--在java中使用synchronized
+# synchronized实现原理      
+站在使用者的角度查看synchronized的原理     
+- 在java中使用synchronized
 ```
     public static void main(String[] args) {
 		synchronized (LRUCache.class) {
