@@ -51,5 +51,4 @@ jvm针对上面的代码编译成指令后如下：
 ```
 对比一下，可以看出在使用synchronized关键的代码中增加了```monitorenter```指令。
 摘录下jdk的规范文档：
-> ==Synchronization of sequences of instructions is typically used to encode the synchronized block of the Java programming language.       The Java Virtual Machine supplies the monitorenter and monitorexit instructions to support such language constructs.     Proper implementation of synchronized blocks requires cooperation from a compiler targeting the Java Virtual Machine (§3.14).==
-```
+> Synchronization of sequences of instructions is typically used to encode the synchronized block of the Java programming language.       The Java Virtual Machine supplies the monitorenter and monitorexit instructions to support such language constructs.     Proper implementation of synchronized blocks requires cooperation from a compiler targeting the Java Virtual Machine (§3.14).
