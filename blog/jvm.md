@@ -165,12 +165,11 @@ PS Old Generation
 851 interned Strings occupying 55496 bytes.
 ```
 ```
-Example 1 - Tuning for Higher Throughput
+
 java -d64 -server -XX:+AggressiveOpts -XX:+UseLargePages -Xmn10g  -Xms26g -Xmx26g
 
 新生代要足够大，使用大的分页。aggressiveOpts使用积极优化性能特性。
 
-Example 2 - Tuning for Lower Response Time
 java -d64 -XX:+UseG1GC -Xms26g Xmx26g -XX:MaxGCPauseMillis=500 -XX:+PrintGCTimeStamp
 
 GC不能够影响程序运行。
@@ -178,15 +177,6 @@ GC不能够影响程序运行。
 ```
 
 #### GC的选择
-
-> If the application has a small data set (up to approximately 100 MB), then select the serial collector with the option -XX:+UseSerialGC.
-
-> If the application will be run on a single processor and there are no pause time requirements, then let the VM select the collector, or select the serial collector with the option -XX:+UseSerialGC.
-
-> If (a) peak application performance is the first priority and (b) there are no pause time requirements or pauses of 1 second or longer are acceptable, then let the VM select the collector, or select the parallel collector with -XX:+UseParallelGC.
-
-> If response time is more important than overall throughput and garbage collection pauses must be kept shorter than approximately 1 second, then select the concurrent collector with -XX:+UseConcMarkSweepGC or -XX:+UseG1GC.
-
 
 jvm应用程序：
 > 除非遇到暂停问题，否则请尝试尽可能多地为虚拟机授予内存。默认大小通常太小。     
