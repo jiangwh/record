@@ -1,4 +1,5 @@
 # Unsafe
+## 在程序中调用unsafe
 ```
 Constructor<Unsafe> constructor =
 Unsafe.class.getDeclaredConstructor(new Class<?>[0]);
@@ -9,7 +10,7 @@ unsafe.objectFieldOffset(Test.class.getDeclaredField("s"));
 //cas操作,返回操作成功或者失败
 boolean res = unsafe.compareAndSwapInt(t, offset, 1, 1);
 ```
-
+## 锁
 ```
 AbstractQueuedSynchronizer
 //定义一个节点
