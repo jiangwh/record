@@ -1,4 +1,7 @@
-# construct
+# ArrayList 原理
+
+## 先看构造器
+
 ```
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
@@ -25,10 +28,11 @@
         }
     }
 ```
+从构造器中可以看出ArrayList的本质是Object的数组。
 ArrayList的构造有三种方式。这三种方式决定了ArrayList分配初始大小不同。
 对于默认的构造器，ArrayList的大小为：10
 
-# extend
+##
 ```
     private void grow(int minCapacity) {
         // overflow-conscious code
