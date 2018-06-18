@@ -1,6 +1,7 @@
 package com.jiangwh.radius;
 
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.logging.Logger;
 
@@ -129,9 +130,21 @@ public class Hexdump {
         }
     }
     
-    public static void main(String[] args) {
-    	byte[] dumpData = "1234567801234567sssdump123".getBytes();
-		Hexdump.hexdump(Logger.getGlobal(),dumpData, 0, dumpData.length-1);
+    public static void main(String[] args) throws IOException {
+//    	FileInputStream fileInputStream = new FileInputStream(new File("/Users/jiangwh/work/note/record/src/main/java/Test.class"));
+//    	byte[] buffer = new byte[1];
+//    	ByteBuffer byteBuffer = ByteBuffer.allocate(1024*10);//10K
+//    	while(-1!=fileInputStream.read(buffer,0,buffer.length)){
+//    		byteBuffer.put(buffer,0,buffer.length);
+//    		buffer = new byte[1];
+//    	}
+//    	fileInputStream.close();
+//    	byte[] bs = new byte[byteBuffer.position()];
+//    	System.out.println(byteBuffer.position());
+//    	ByteBuffer dumpData = byteBuffer.get(bs, 0, byteBuffer.position());
+//    	
+//		Hexdump.hexdump(Logger.getGlobal(),dumpData.array(), 0, dumpData.array().length-1);
+		
 	}
 }
 
