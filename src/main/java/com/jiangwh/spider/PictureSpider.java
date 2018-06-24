@@ -77,7 +77,8 @@ public class PictureSpider {
 			document.addPage(page);
 			PDImageXObject pdImage = PDImageXObject.createFromFile(file.getAbsolutePath(), document);
 			PDPageContentStream contents = new PDPageContentStream(document, page);
-			contents.drawImage(pdImage,0,216,pdImage.getWidth()*48/100,pdImage.getHeight()/2);
+//			contents.drawImage(pdImage,0,216,pdImage.getWidth()*48/100,pdImage.getHeight()/2);
+			contents.drawImage(pdImage,45,20,pdImage.getWidth()*80/100,pdImage.getHeight()*80/100);
 			contents.close();
 		}
 		document.save("pdf.pdf");

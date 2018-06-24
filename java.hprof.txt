@@ -1,0 +1,847 @@
+JAVA PROFILE 1.0.1, created Fri Mar 16 11:14:50 2018
+
+Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+  - Neither the name of Oracle nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
+
+WARNING!  This file format is under development, and is subject to
+change without notice.
+
+This file contains the following types of records:
+
+THREAD START
+THREAD END      mark the lifetime of Java threads
+
+TRACE           represents a Java stack trace.  Each trace consists
+                of a series of stack frames.  Other records refer to
+                TRACEs to identify (1) where object allocations have
+                taken place, (2) the frames in which GC roots were
+                found, and (3) frequently executed methods.
+
+HEAP DUMP       is a complete snapshot of all live objects in the Java
+                heap.  Following distinctions are made:
+
+                ROOT    root set as determined by GC
+                CLS     classes 
+                OBJ     instances
+                ARR     arrays
+
+SITES           is a sorted list of allocation sites.  This identifies
+                the most heavily allocated object types, and the TRACE
+                at which those allocations occurred.
+
+CPU SAMPLES     is a statistical profile of program execution.  The VM
+                periodically samples all running threads, and assigns
+                a quantum to active TRACEs in those threads.  Entries
+                in this record are TRACEs ranked by the percentage of
+                total quanta they consumed; top-ranked TRACEs are
+                typically hot spots in the program.
+
+CPU TIME        is a profile of program execution obtained by measuring
+                the time spent in individual methods (excluding the time
+                spent in callees), as well as by counting the number of
+                times each method is called. Entries in this record are
+                TRACEs ranked by the percentage of total CPU time. The
+                "count" field indicates the number of times each TRACE 
+                is invoked.
+
+MONITOR TIME    is a profile of monitor contention obtained by measuring
+                the time spent by a thread waiting to enter a monitor.
+                Entries in this record are TRACEs ranked by the percentage
+                of total monitor contention time and a brief description
+                of the monitor.  The "count" field indicates the number of 
+                times the monitor was contended at that TRACE.
+
+MONITOR DUMP    is a complete snapshot of all the monitors and threads in 
+                the System.
+
+HEAP DUMP, SITES, CPU SAMPLES|TIME and MONITOR DUMP|TIME records are generated 
+at program exit.  They can also be obtained during program execution by typing 
+Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
+
+--------
+
+THREAD START (obj=5000018a, id = 200004, name="JFR request timer", group="main")
+THREAD START (obj=50000641, id = 200005, name="VM JFR Buffer Thread", group="system")
+THREAD START (obj=5000065e, id = 200001, name="main", group="main")
+THREAD START (obj=500006fc, id = 200006, name="ForkJoinPool.commonPool-worker-1", group="main")
+THREAD START (obj=500006fd, id = 200007, name="ForkJoinPool.commonPool-worker-2", group="main")
+THREAD START (obj=500006fe, id = 200008, name="ForkJoinPool.commonPool-worker-3", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=5000065e, id = 200009, name="DestroyJavaVM", group="main")
+THREAD START (obj=50000728, id = 200010, name="Thread-1", group="main")
+THREAD END (id = 200004)
+THREAD END (id = 200010)
+THREAD END (id = 200005)
+THREAD END (id = 200009)
+THREAD END (id = 200002)
+TRACE 300945:
+	oracle.jrockit.jfr.VMJFR.retransformClasses0(VMJFR.java:Unknown line)
+	oracle.jrockit.jfr.VMJFR.instrument(VMJFR.java:432)
+	oracle.jrockit.jfr.JFR.init(JFR.java:110)
+TRACE 301120:
+	oracle.jrockit.jfr.VMJFR.stop(VMJFR.java:Unknown line)
+	oracle.jrockit.jfr.JFRImpl.stopping(JFRImpl.java:444)
+	oracle.jrockit.jfr.Recording.stop(Recording.java:376)
+	oracle.jrockit.jfr.JFRImpl.release(JFRImpl.java:684)
+TRACE 300956:
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1426)
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1354)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitMaxs(MethodWriter.java:1504)
+	jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.visitMaxs(LocalVariablesSorter.java:199)
+TRACE 300001:
+	java.lang.ClassLoader.findBootstrapClass(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.findBootstrapClassOrNull(ClassLoader.java:1012)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:413)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:411)
+TRACE 300035:
+	java.io.BufferedInputStream.getBufIfOpen(BufferedInputStream.java:168)
+	java.io.BufferedInputStream.read(BufferedInputStream.java:269)
+	java.io.DataInputStream.readUnsignedShort(DataInputStream.java:338)
+	java.io.DataInputStream.readUTF(DataInputStream.java:589)
+TRACE 300615:
+	java.lang.String.startsWith(String.java:1400)
+	java.lang.String.startsWith(String.java:1421)
+	com.sun.org.apache.xerces.internal.parsers.XML11Configuration.checkFeature(XML11Configuration.java:1255)
+	com.sun.org.apache.xerces.internal.util.ParserConfigurationSettings.setFeature(ParserConfigurationSettings.java:144)
+TRACE 300137:
+	java.util.zip.Inflater.reset(Inflater.java:Unknown line)
+	java.util.zip.Inflater.reset(Inflater.java:352)
+	java.util.zip.ZipFile.releaseInflater(ZipFile.java:463)
+	java.util.zip.ZipFile.access$100(ZipFile.java:61)
+TRACE 300936:
+	java.util.Arrays.copyOfRange(Arrays.java:3664)
+	java.lang.String.<init>(String.java:201)
+	java.lang.StringBuilder.toString(StringBuilder.java:407)
+	jdk.internal.org.objectweb.asm.commons.SimpleRemapper.mapMethodName(SimpleRemapper.java:84)
+TRACE 300937:
+	jdk.internal.org.objectweb.asm.Frame.execute(Frame.java:880)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitFieldInsn(MethodWriter.java:882)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1443)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+TRACE 301052:
+	sun.misc.Unsafe.defineAnonymousClass(Unsafe.java:Unknown line)
+	java.lang.invoke.InvokerBytecodeGenerator.loadAndInitializeInvokerClass(InvokerBytecodeGenerator.java:254)
+	java.lang.invoke.InvokerBytecodeGenerator.loadMethod(InvokerBytecodeGenerator.java:246)
+	java.lang.invoke.InvokerBytecodeGenerator.generateNamedFunctionInvoker(InvokerBytecodeGenerator.java:1111)
+TRACE 300938:
+	oracle.jrockit.jfr.NativeLogger.output0(NativeLogger.java:Unknown line)
+	oracle.jrockit.jfr.NativeLogger.output(NativeLogger.java:38)
+	oracle.jrockit.jfr.Logger.trace(Logger.java:177)
+	oracle.jrockit.jfr.JIMethodMergeAdapter.visitMethod(JIMethodMergeAdapter.java:66)
+TRACE 300581:
+	com.sun.org.apache.xerces.internal.parsers.XML11Configuration.addRecognizedParamsAndSetDefaults(XML11Configuration.java:1497)
+	com.sun.org.apache.xerces.internal.parsers.XML11Configuration.addCommonComponent(XML11Configuration.java:1459)
+	com.sun.org.apache.xerces.internal.parsers.XML11Configuration.<init>(XML11Configuration.java:555)
+	com.sun.org.apache.xerces.internal.parsers.XIncludeAwareParserConfiguration.<init>(XIncludeAwareParserConfiguration.java:130)
+TRACE 300940:
+	jdk.internal.org.objectweb.asm.ClassReader.readUnsignedShort(ClassReader.java:2341)
+	jdk.internal.org.objectweb.asm.ClassReader.readUTF8(ClassReader.java:2402)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1441)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+TRACE 300213:
+	java.util.Formatter.getZero(Formatter.java:2282)
+	java.util.Formatter.<init>(Formatter.java:1892)
+	java.util.Formatter.<init>(Formatter.java:1914)
+	oracle.jrockit.jfr.NativeLogger$1.initialValue(NativeLogger.java:19)
+TRACE 300501:
+	java.util.Properties.load0(Properties.java:381)
+	java.util.Properties.load(Properties.java:341)
+	java.util.PropertyResourceBundle.<init>(PropertyResourceBundle.java:138)
+	java.util.ResourceBundle$Control.newBundle(ResourceBundle.java:2687)
+TRACE 300943:
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1317)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:722)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:535)
+TRACE 300944:
+	java.util.AbstractMap.toString(AbstractMap.java:528)
+	java.lang.String.valueOf(String.java:2981)
+	java.lang.StringBuilder.append(StringBuilder.java:131)
+	oracle.jrockit.jfr.JIMethodMergeAdapter.visitEnd(JIMethodMergeAdapter.java:79)
+TRACE 300946:
+	jdk.internal.org.objectweb.asm.tree.AbstractInsnNode.<init>(AbstractInsnNode.java:207)
+	jdk.internal.org.objectweb.asm.tree.LineNumberNode.<init>(LineNumberNode.java:94)
+	jdk.internal.org.objectweb.asm.tree.MethodNode.visitLineNumber(MethodNode.java:629)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1319)
+TRACE 300666:
+	com.sun.org.apache.bcel.internal.generic.BasicType.<init>(BasicType.java:75)
+	com.sun.org.apache.bcel.internal.generic.Type.<clinit>(Type.java:77)
+	oracle.jrockit.jfr.events.EventHandlerCreator.<init>(EventHandlerCreator.java:85)
+	oracle.jrockit.jfr.JFRImpl.createHandler(JFRImpl.java:412)
+TRACE 300948:
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1415)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:722)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:535)
+TRACE 300949:
+	jdk.internal.org.objectweb.asm.commons.SimpleRemapper.map(SimpleRemapper.java:96)
+	jdk.internal.org.objectweb.asm.commons.SimpleRemapper.mapMethodName(SimpleRemapper.java:84)
+	jdk.internal.org.objectweb.asm.commons.RemappingMethodAdapter.doVisitMethodInsn(RemappingMethodAdapter.java:183)
+	jdk.internal.org.objectweb.asm.commons.RemappingMethodAdapter.visitMethodInsn(RemappingMethodAdapter.java:170)
+TRACE 301065:
+	java.lang.invoke.InvokerBytecodeGenerator.emitStaticInvoke(InvokerBytecodeGenerator.java:639)
+	java.lang.invoke.InvokerBytecodeGenerator.generateCustomizedCodeBytes(InvokerBytecodeGenerator.java:521)
+	java.lang.invoke.InvokerBytecodeGenerator.generateCustomizedCode(InvokerBytecodeGenerator.java:490)
+	java.lang.invoke.LambdaForm.compileToBytecode(LambdaForm.java:454)
+TRACE 300950:
+	jdk.internal.org.objectweb.asm.tree.InsnList.add(InsnList.java:276)
+	jdk.internal.org.objectweb.asm.tree.MethodNode.visitMethodInsn(MethodNode.java:493)
+	oracle.jrockit.jfr.JIMethodCallInliner.visitMethodInsn(JIMethodCallInliner.java:67)
+	jdk.internal.org.objectweb.asm.commons.RemappingMethodAdapter.doVisitMethodInsn(RemappingMethodAdapter.java:182)
+TRACE 300951:
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1347)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:722)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:535)
+TRACE 300952:
+	jdk.internal.org.objectweb.asm.ByteVector.putUTF8(ByteVector.java:258)
+	jdk.internal.org.objectweb.asm.ClassWriter.newUTF8(ClassWriter.java:1121)
+	jdk.internal.org.objectweb.asm.ClassWriter.newNameTypeItem(ClassWriter.java:1591)
+	jdk.internal.org.objectweb.asm.ClassWriter.newNameType(ClassWriter.java:1574)
+TRACE 300953:
+	jdk.internal.org.objectweb.asm.ByteVector.enlarge(ByteVector.java:364)
+	jdk.internal.org.objectweb.asm.ByteVector.put12(ByteVector.java:171)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitFieldInsn(MethodWriter.java:910)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1443)
+TRACE 300954:
+	java.lang.String.toCharArray(String.java:2886)
+	jdk.internal.org.objectweb.asm.Type.getObjectType(Type.java:257)
+	jdk.internal.org.objectweb.asm.commons.Remapper.mapType(Remapper.java:110)
+	jdk.internal.org.objectweb.asm.commons.Remapper.mapType(Remapper.java:121)
+TRACE 300955:
+	jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.remap(LocalVariablesSorter.java:381)
+	jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.visitVarInsn(LocalVariablesSorter.java:189)
+	jdk.internal.org.objectweb.asm.tree.VarInsnNode.accept(VarInsnNode.java:115)
+	jdk.internal.org.objectweb.asm.tree.InsnList.accept(InsnList.java:191)
+TRACE 300957:
+	jdk.internal.org.objectweb.asm.MethodWriter.visitLineNumber(MethodWriter.java:1426)
+	jdk.internal.org.objectweb.asm.MethodVisitor.visitLineNumber(MethodVisitor.java:880)
+	jdk.internal.org.objectweb.asm.tree.LineNumberNode.accept(LineNumberNode.java:106)
+	jdk.internal.org.objectweb.asm.tree.InsnList.accept(InsnList.java:191)
+TRACE 300958:
+	jdk.internal.org.objectweb.asm.tree.AbstractInsnNode.acceptAnnotations(AbstractInsnNode.java:267)
+	jdk.internal.org.objectweb.asm.tree.VarInsnNode.accept(VarInsnNode.java:116)
+	jdk.internal.org.objectweb.asm.tree.InsnList.accept(InsnList.java:191)
+	jdk.internal.org.objectweb.asm.tree.MethodNode.accept(MethodNode.java:845)
+TRACE 300959:
+	java.util.Arrays.copyOf(Arrays.java:3332)
+	java.lang.AbstractStringBuilder.expandCapacity(AbstractStringBuilder.java:137)
+	java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:121)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:421)
+TRACE 300871:
+	java.lang.System.arraycopy(System.java:Unknown line)
+	java.lang.String.getChars(String.java:814)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:422)
+	java.lang.StringBuffer.append(StringBuffer.java:272)
+TRACE 301077:
+	java.util.stream.ForEachOps$ForEachTask.compute(ForEachOps.java:282)
+	java.util.concurrent.CountedCompleter.exec(CountedCompleter.java:731)
+	java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:289)
+	java.util.concurrent.ForkJoinTask.doInvoke(ForkJoinTask.java:400)
+TRACE 300961:
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1439)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:722)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:535)
+TRACE 300962:
+	java.lang.Object.<init>(Object.java:37)
+	jdk.internal.org.objectweb.asm.tree.AbstractInsnNode.<init>(AbstractInsnNode.java:206)
+	jdk.internal.org.objectweb.asm.tree.LabelNode.<init>(LabelNode.java:74)
+	jdk.internal.org.objectweb.asm.tree.MethodNode.getLabelNode(MethodNode.java:654)
+TRACE 300963:
+	jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.visitFrame(LocalVariablesSorter.java:237)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1330)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:722)
+TRACE 300527:
+	com.sun.org.apache.xerces.internal.utils.XMLSecurityManager.isOverLimit(XMLSecurityManager.java:425)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.checkDepth(XMLDocumentFragmentScannerImpl.java:1922)
+	com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.scanStartElement(XMLNSDocumentScannerImpl.java:223)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:2786)
+TRACE 300965:
+	jdk.internal.org.objectweb.asm.ClassReader.readUnsignedShort(ClassReader.java:2341)
+	jdk.internal.org.objectweb.asm.ClassReader.readUTF8(ClassReader.java:2402)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1440)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+TRACE 300966:
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1439)
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1354)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitMaxs(MethodWriter.java:1504)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1583)
+TRACE 300967:
+	jdk.internal.org.objectweb.asm.MethodWriter.addSuccessor(MethodWriter.java:1698)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitLabel(MethodWriter.java:1114)
+	jdk.internal.org.objectweb.asm.MethodVisitor.visitLabel(MethodVisitor.java:569)
+	jdk.internal.org.objectweb.asm.tree.LabelNode.accept(LabelNode.java:96)
+TRACE 300968:
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1426)
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1354)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitMaxs(MethodWriter.java:1504)
+	jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.visitMaxs(LocalVariablesSorter.java:199)
+TRACE 300969:
+	java.lang.System.arraycopy(System.java:Unknown line)
+	java.lang.String.toCharArray(String.java:2887)
+	jdk.internal.org.objectweb.asm.Type.getType(Type.java:246)
+	jdk.internal.org.objectweb.asm.commons.Remapper.mapDesc(Remapper.java:83)
+TRACE 300970:
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1359)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitMaxs(MethodWriter.java:1504)
+	jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.visitMaxs(LocalVariablesSorter.java:199)
+	jdk.internal.org.objectweb.asm.tree.MethodNode.accept(MethodNode.java:863)
+TRACE 300971:
+	jdk.internal.org.objectweb.asm.tree.VarInsnNode.accept(VarInsnNode.java:115)
+	jdk.internal.org.objectweb.asm.tree.InsnList.accept(InsnList.java:191)
+	jdk.internal.org.objectweb.asm.tree.MethodNode.accept(MethodNode.java:845)
+	oracle.jrockit.jfr.JIMethodMergeAdapter.visitEnd(JIMethodMergeAdapter.java:85)
+TRACE 300972:
+	java.lang.String.<init>(String.java:191)
+	jdk.internal.org.objectweb.asm.Type.getInternalName(Type.java:609)
+	jdk.internal.org.objectweb.asm.commons.Remapper.mapType(Remapper.java:121)
+	jdk.internal.org.objectweb.asm.commons.RemappingMethodAdapter.visitFieldInsn(RemappingMethodAdapter.java:146)
+TRACE 300973:
+	jdk.internal.org.objectweb.asm.Frame.merge(Frame.java:1360)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitMaxs(MethodWriter.java:1504)
+	jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.visitMaxs(LocalVariablesSorter.java:199)
+	jdk.internal.org.objectweb.asm.tree.MethodNode.accept(MethodNode.java:863)
+TRACE 300873:
+	java.lang.String.hashCode(String.java:1453)
+	sun.reflect.annotation.AnnotationInvocationHandler.invoke(AnnotationInvocationHandler.java:67)
+	com.sun.proxy.$Proxy2.contentType(<Unknown Source>:Unknown line)
+	oracle.jrockit.jfr.events.ValueDescriptor.<init>(ValueDescriptor.java:191)
+TRACE 300621:
+	java.lang.String.charAt(String.java:648)
+	java.net.URI$Parser.charAt(URI.java:2876)
+	java.net.URI$Parser.scan(URI.java:2995)
+	java.net.URI$Parser.parseHostname(URI.java:3373)
+TRACE 300875:
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateConstructor(EventHandlerCreator.java:258)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateBytes(EventHandlerCreator.java:194)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateClass(EventHandlerCreator.java:201)
+	oracle.jrockit.jfr.events.EventHandlerCreator.createHandler(EventHandlerCreator.java:222)
+TRACE 300876:
+	oracle.jrockit.jfr.VMJFR.redefineClass0(VMJFR.java:Unknown line)
+	oracle.jrockit.jfr.VMJFR.instrument(VMJFR.java:423)
+	oracle.jrockit.jfr.JFR.init(JFR.java:110)
+TRACE 300412:
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.<init>(XMLDocumentScannerImpl.java:207)
+	com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.<init>(XMLNSDocumentScannerImpl.java:63)
+	com.sun.org.apache.xerces.internal.impl.xs.opti.SchemaParsingConfig.<init>(SchemaParsingConfig.java:350)
+	com.sun.org.apache.xerces.internal.impl.xs.opti.SchemaParsingConfig.<init>(SchemaParsingConfig.java:255)
+TRACE 300162:
+	java.util.jar.JarFile.match(JarFile.java:533)
+	java.util.jar.JarFile.checkForSpecialAttributes(JarFile.java:556)
+	java.util.jar.JarFile.hasClassPathAttribute(JarFile.java:518)
+	java.util.jar.JavaUtilJarAccessImpl.jarFileHasClassPathAttribute(JavaUtilJarAccessImpl.java:37)
+TRACE 300181:
+	java.util.Currency$1.run(Currency.java:230)
+	java.util.Currency$1.run(Currency.java:212)
+	java.security.AccessController.doPrivileged(AccessController.java:Unknown line)
+	java.util.Currency.<clinit>(Currency.java:212)
+TRACE 301098:
+	java.net.NetworkInterface.getMacAddr0(NetworkInterface.java:Unknown line)
+	java.net.NetworkInterface.getHardwareAddress(NetworkInterface.java:460)
+	java.util.concurrent.ThreadLocalRandom.initialSeed(ThreadLocalRandom.java:158)
+	java.util.concurrent.ThreadLocalRandom.<clinit>(ThreadLocalRandom.java:137)
+TRACE 300981:
+	sun.util.locale.provider.LocaleResources.getTimeZoneNames(LocaleResources.java:255)
+	sun.util.locale.provider.TimeZoneNameProviderImpl.getDisplayNameArray(TimeZoneNameProviderImpl.java:122)
+	sun.util.locale.provider.TimeZoneNameProviderImpl.getDisplayName(TimeZoneNameProviderImpl.java:98)
+	sun.util.locale.provider.TimeZoneNameUtility$TimeZoneNameGetter.getName(TimeZoneNameUtility.java:325)
+TRACE 300820:
+	com.sun.org.apache.bcel.internal.classfile.JavaClass.<init>(JavaClass.java:233)
+	com.sun.org.apache.bcel.internal.generic.ClassGen.getJavaClass(ClassGen.java:177)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateBytes(EventHandlerCreator.java:197)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateClass(EventHandlerCreator.java:201)
+TRACE 300354:
+	sun.net.www.protocol.jar.URLJarFile.getEntry(URLJarFile.java:131)
+	sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:132)
+	sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:150)
+	java.net.URL.openStream(URL.java:1038)
+TRACE 300374:
+	com.sun.org.apache.xerces.internal.impl.XMLEntityManager.setScannerVersion(XMLEntityManager.java:566)
+	com.sun.org.apache.xerces.internal.impl.XMLEntityManager.<init>(XMLEntityManager.java:409)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaLoader.<init>(XMLSchemaLoader.java:294)
+	com.sun.org.apache.xerces.internal.jaxp.validation.XMLSchemaFactory.<init>(XMLSchemaFactory.java:96)
+TRACE 300336:
+	java.io.BufferedReader.read(BufferedReader.java:193)
+	oracle.jrockit.jfr.settings.PresetFile.readContent(PresetFile.java:214)
+	oracle.jrockit.jfr.settings.PresetFile.readContent(PresetFile.java:206)
+	oracle.jrockit.jfr.settings.PresetFile$PresetProxy.<init>(PresetFile.java:40)
+TRACE 300986:
+	oracle.jrockit.jfr.VMJFR.start(VMJFR.java:Unknown line)
+	oracle.jrockit.jfr.JFRImpl.started(JFRImpl.java:426)
+	oracle.jrockit.jfr.Recording.start(Recording.java:334)
+	oracle.jrockit.jfr.JFRImpl.enableDefaultRecording(JFRImpl.java:664)
+TRACE 300987:
+	sun.misc.Unsafe.putByte(Unsafe.java:Unknown line)
+	java.nio.DirectByteBuffer.put(DirectByteBuffer.java:306)
+	oracle.jrockit.jfr.VMJFR$ThreadBuffer.release(VMJFR.java:117)
+	oracle.jrockit.jfr.VMJFR$ThreadBuffer.finish(VMJFR.java:139)
+TRACE 301106:
+	java.util.EnumSet.noneOf(EnumSet.java:115)
+	java.util.EnumSet.of(EnumSet.java:259)
+	java.util.stream.Collectors.<clinit>(Collectors.java:107)
+	com.jiangwh.test.Test.main(Test.java:42)
+TRACE 300396:
+	com.sun.org.apache.xerces.internal.impl.xs.traversers.XSDHandler.<init>(XSDHandler.java:464)
+	com.sun.org.apache.xerces.internal.impl.xs.traversers.XSDHandler.<init>(XSDHandler.java:482)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaLoader.<init>(XMLSchemaLoader.java:363)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaLoader.<init>(XMLSchemaLoader.java:294)
+TRACE 300509:
+	com.sun.org.apache.xerces.internal.impl.xs.traversers.XSDHandler.parseSchema(XSDHandler.java:554)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaLoader.loadSchema(XMLSchemaLoader.java:617)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaLoader.loadGrammar(XMLSchemaLoader.java:575)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaLoader.loadGrammar(XMLSchemaLoader.java:541)
+TRACE 300886:
+	java.io.ByteArrayOutputStream.write(ByteArrayOutputStream.java:138)
+	java.io.DataOutputStream.writeShort(DataOutputStream.java:167)
+	com.sun.org.apache.bcel.internal.classfile.ConstantCP.dump(ConstantCP.java:115)
+	com.sun.org.apache.bcel.internal.classfile.ConstantPool.dump(ConstantPool.java:233)
+TRACE 300337:
+	java.io.CharArrayWriter.write(CharArrayWriter.java:80)
+	oracle.jrockit.jfr.settings.PresetFile.readContent(PresetFile.java:215)
+	oracle.jrockit.jfr.settings.PresetFile.readContent(PresetFile.java:206)
+	oracle.jrockit.jfr.settings.PresetFile$PresetProxy.<init>(PresetFile.java:40)
+TRACE 300888:
+	com.sun.org.apache.bcel.internal.generic.MethodGen.getMaxStack(MethodGen.java:880)
+	com.sun.org.apache.bcel.internal.generic.MethodGen.setMaxStack(MethodGen.java:774)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateWrite(EventHandlerCreator.java:564)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateBytes(EventHandlerCreator.java:195)
+TRACE 300631:
+	java.lang.String.<init>(String.java:191)
+	java.lang.String.substring(String.java:1956)
+	java.net.URI$Parser.substring(URI.java:2869)
+	java.net.URI$Parser.parseHostname(URI.java:3398)
+TRACE 300890:
+	sun.reflect.Reflection.getCallerClass(Reflection.java:Unknown line)
+	java.lang.Class.getConstructor(Class.java:1816)
+	oracle.jrockit.jfr.events.EventHandlerCreator.createHandler(EventHandlerCreator.java:225)
+	oracle.jrockit.jfr.JFRImpl.createHandler(JFRImpl.java:414)
+TRACE 300632:
+	java.lang.System.arraycopy(System.java:Unknown line)
+	java.util.Arrays.copyOf(Arrays.java:3333)
+	java.lang.AbstractStringBuilder.expandCapacity(AbstractStringBuilder.java:137)
+	java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:121)
+TRACE 300633:
+	java.lang.StringBuilder.<init>(StringBuilder.java:101)
+	oracle.jrockit.jfr.settings.JFCParser$ConfigurationHandler.characters(JFCParser.java:116)
+	com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.characters(AbstractSAXParser.java:546)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:463)
+TRACE 300893:
+	sun.misc.ProxyGenerator$ConstantPool$IndirectEntry.hashCode(ProxyGenerator.java:2015)
+	java.util.HashMap.hash(HashMap.java:338)
+	java.util.HashMap.get(HashMap.java:556)
+	sun.misc.ProxyGenerator$ConstantPool.getIndirect(ProxyGenerator.java:1898)
+TRACE 300634:
+	java.lang.System.arraycopy(System.java:Unknown line)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:570)
+	java.lang.StringBuilder.append(StringBuilder.java:190)
+	oracle.jrockit.jfr.settings.JFCParser$ConfigurationHandler.characters(JFCParser.java:118)
+TRACE 300999:
+	java.lang.invoke.LambdaForm$NamedFunction.<init>(LambdaForm.java:1002)
+	java.lang.invoke.MethodHandle.<clinit>(MethodHandle.java:1476)
+TRACE 301119:
+	java.util.IdentityHashMap$KeySet.iterator(IdentityHashMap.java:981)
+	java.lang.ApplicationShutdownHooks.runHooks(ApplicationShutdownHooks.java:101)
+	java.lang.ApplicationShutdownHooks$1.run(ApplicationShutdownHooks.java:46)
+	java.lang.Shutdown.runHooks(Shutdown.java:123)
+TRACE 300779:
+	com.sun.org.apache.bcel.internal.generic.InstructionConstants.<clinit>(InstructionConstants.java:176)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateConstructor(EventHandlerCreator.java:265)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateBytes(EventHandlerCreator.java:194)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateClass(EventHandlerCreator.java:201)
+TRACE 300564:
+	com.sun.org.apache.xerces.internal.impl.dv.xs.XSSimpleTypeDecl.normalize(XSSimpleTypeDecl.java:2006)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.XSSimpleTypeDecl.normalize(XSSimpleTypeDecl.java:2047)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.XSSimpleTypeDecl.getActualValue(XSSimpleTypeDecl.java:1826)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.XSSimpleTypeDecl.validate(XSSimpleTypeDecl.java:1554)
+TRACE 300537:
+	com.sun.org.apache.xerces.internal.util.SymbolHash.put(SymbolHash.java:93)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.BaseSchemaDVFactory.createBuiltInTypes(BaseSchemaDVFactory.java:225)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.ExtendedSchemaDVFactoryImpl.createBuiltInTypes(ExtendedSchemaDVFactoryImpl.java:51)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.ExtendedSchemaDVFactoryImpl.<clinit>(ExtendedSchemaDVFactoryImpl.java:41)
+TRACE 300338:
+	java.io.BufferedReader.read(BufferedReader.java:193)
+	oracle.jrockit.jfr.settings.PresetFile.readContent(PresetFile.java:214)
+	oracle.jrockit.jfr.settings.PresetFile.readContent(PresetFile.java:206)
+	oracle.jrockit.jfr.settings.PresetFile$PresetProxy.<init>(PresetFile.java:40)
+TRACE 300899:
+	java.lang.String.equals(String.java:976)
+	java.util.Vector.indexOf(Vector.java:408)
+	java.util.Vector.contains(Vector.java:367)
+	java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1902)
+TRACE 301005:
+	java.lang.invoke.MethodHandles$Lookup.linkMethodHandleConstant(MethodHandles.java:1739)
+	java.lang.invoke.MethodHandleNatives.linkMethodHandleConstant(MethodHandleNatives.java:442)
+	com.jiangwh.test.Test.main(Test.java:28)
+TRACE 300900:
+	java.io.DataOutputStream.writeUTF(DataOutputStream.java:352)
+	java.io.DataOutputStream.writeUTF(DataOutputStream.java:323)
+	sun.misc.ProxyGenerator$ConstantPool$ValueEntry.write(ProxyGenerator.java:1939)
+	sun.misc.ProxyGenerator$ConstantPool.write(ProxyGenerator.java:1846)
+TRACE 300597:
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator$XPathMatcherStack.<init>(XMLSchemaValidator.java:3326)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.<init>(XMLSchemaValidator.java:1265)
+	com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.<init>(SAXParserImpl.java:204)
+	com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl.newSAXParser(SAXParserFactoryImpl.java:81)
+TRACE 300836:
+	sun.reflect.generics.parser.SignatureParser.current(SignatureParser.java:95)
+	sun.reflect.generics.parser.SignatureParser.parseIdentifier(SignatureParser.java:257)
+	sun.reflect.generics.parser.SignatureParser.parsePackageNameAndSimpleClassTypeSignature(SignatureParser.java:336)
+	sun.reflect.generics.parser.SignatureParser.parseClassTypeSignature(SignatureParser.java:310)
+TRACE 300903:
+	sun.util.calendar.CalendarUtils.isGregorianLeapYear(CalendarUtils.java:43)
+	sun.util.calendar.BaseCalendar.isLeapYear(BaseCalendar.java:535)
+	sun.util.calendar.BaseCalendar.getCalendarDateFromFixedDate(BaseCalendar.java:427)
+	sun.util.calendar.AbstractCalendar.getCalendarDate(AbstractCalendar.java:165)
+TRACE 300837:
+	java.lang.Class.getDeclaredConstructors0(Class.java:Unknown line)
+	java.lang.Class.privateGetDeclaredConstructors(Class.java:2663)
+	java.lang.Class.getConstructor0(Class.java:3067)
+	java.lang.Class.getConstructor(Class.java:1817)
+TRACE 300686:
+	com.sun.org.apache.bcel.internal.generic.LocalVariableGen.notifyTargetChanging(LocalVariableGen.java:159)
+	com.sun.org.apache.bcel.internal.generic.LocalVariableGen.setStart(LocalVariableGen.java:193)
+	com.sun.org.apache.bcel.internal.generic.LocalVariableGen.<init>(LocalVariableGen.java:102)
+	com.sun.org.apache.bcel.internal.generic.MethodGen.addLocalVariable(MethodGen.java:313)
+TRACE 300252:
+	javax.management.ImmutableDescriptor.makeMap(ImmutableDescriptor.java:161)
+	javax.management.ImmutableDescriptor.makeMap(ImmutableDescriptor.java:192)
+	javax.management.ImmutableDescriptor.<init>(ImmutableDescriptor.java:90)
+	javax.management.ImmutableDescriptor.<clinit>(ImmutableDescriptor.java:62)
+TRACE 300042:
+	java.util.Calendar.createCalendar(Calendar.java:1662)
+	java.util.Calendar.getInstance(Calendar.java:1655)
+	java.text.SimpleDateFormat.initializeCalendar(SimpleDateFormat.java:657)
+	java.text.SimpleDateFormat.<init>(SimpleDateFormat.java:601)
+TRACE 300098:
+	java.util.zip.ZipFile.open(ZipFile.java:Unknown line)
+	java.util.zip.ZipFile.<init>(ZipFile.java:220)
+	java.util.zip.ZipFile.<init>(ZipFile.java:150)
+	java.util.jar.JarFile.<init>(JarFile.java:166)
+TRACE 300738:
+	com.sun.org.apache.bcel.internal.generic.InstructionConstants.<clinit>(InstructionConstants.java:135)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateConstructor(EventHandlerCreator.java:265)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateBytes(EventHandlerCreator.java:194)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateClass(EventHandlerCreator.java:201)
+TRACE 301016:
+	sun.invoke.util.BytecodeDescriptor.parseSig(BytecodeDescriptor.java:78)
+	sun.invoke.util.BytecodeDescriptor.parseMethod(BytecodeDescriptor.java:63)
+	sun.invoke.util.BytecodeDescriptor.parseMethod(BytecodeDescriptor.java:41)
+	java.lang.invoke.MethodType.fromMethodDescriptorString(MethodType.java:911)
+TRACE 301017:
+	java.lang.ClassLoader.findLoadedClass0(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.findLoadedClass(ClassLoader.java:1035)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:406)
+	sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+TRACE 300570:
+	java.lang.String.equals(String.java:966)
+	com.sun.org.apache.xerces.internal.impl.xs.traversers.XSAttributeChecker.checkAttributes(XSAttributeChecker.java:1190)
+	com.sun.org.apache.xerces.internal.impl.xs.traversers.XSAttributeChecker.checkAttributes(XSAttributeChecker.java:962)
+	com.sun.org.apache.xerces.internal.impl.xs.traversers.XSDElementTraverser.traverseLocal(XSDElementTraverser.java:160)
+TRACE 300490:
+	com.sun.org.apache.xerces.internal.impl.dv.xs.XSSimpleTypeDecl.<clinit>(XSSimpleTypeDecl.java:2837)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.SchemaDVFactoryImpl.createBuiltInTypes(SchemaDVFactoryImpl.java:47)
+	com.sun.org.apache.xerces.internal.impl.dv.xs.SchemaDVFactoryImpl.<clinit>(SchemaDVFactoryImpl.java:42)
+	sun.reflect.NativeConstructorAccessorImpl.newInstance0(NativeConstructorAccessorImpl.java:Unknown line)
+TRACE 300184:
+	sun.util.locale.provider.NumberFormatProviderImpl.getInstance(NumberFormatProviderImpl.java:180)
+	sun.util.locale.provider.NumberFormatProviderImpl.getIntegerInstance(NumberFormatProviderImpl.java:131)
+	java.text.NumberFormat.getInstance(NumberFormat.java:884)
+	java.text.NumberFormat.getInstance(NumberFormat.java:861)
+TRACE 301142:
+	java.io.FileInputStream.readBytes(FileInputStream.java:Unknown line)
+	java.io.FileInputStream.read(FileInputStream.java:246)
+	java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	java.io.BufferedInputStream.read(BufferedInputStream.java:345)
+TRACE 300645:
+	java.net.URI.match(URI.java:2515)
+	java.net.URI.access$300(URI.java:464)
+	java.net.URI$Parser.scan(URI.java:2996)
+	java.net.URI$Parser.checkChars(URI.java:3019)
+TRACE 300646:
+	java.lang.String.charAt(String.java:648)
+	java.net.URI$Parser.charAt(URI.java:2876)
+	java.net.URI$Parser.scan(URI.java:2995)
+	java.net.URI$Parser.checkChars(URI.java:3019)
+TRACE 300310:
+	java.lang.Object.clone(Object.java:Unknown line)
+	java.lang.reflect.Method.getParameterTypes(Method.java:250)
+	com.sun.jmx.mbeanserver.StandardMBeanIntrospector.getSignature(StandardMBeanIntrospector.java:97)
+	com.sun.jmx.mbeanserver.StandardMBeanIntrospector.getSignature(StandardMBeanIntrospector.java:46)
+TRACE 301024:
+	jdk.internal.org.objectweb.asm.ByteVector.putShort(ByteVector.java:152)
+	jdk.internal.org.objectweb.asm.ClassWriter.put122(ClassWriter.java:1789)
+	jdk.internal.org.objectweb.asm.ClassWriter.newNameTypeItem(ClassWriter.java:1591)
+	jdk.internal.org.objectweb.asm.ClassWriter.newNameType(ClassWriter.java:1574)
+TRACE 301025:
+	java.lang.Class.getModifiers(Class.java:Unknown line)
+	java.lang.invoke.InvokerBytecodeGenerator.isStaticallyNameable(InvokerBytecodeGenerator.java:626)
+	java.lang.invoke.InvokerBytecodeGenerator.isStaticallyInvocable(InvokerBytecodeGenerator.java:605)
+	java.lang.invoke.InvokerBytecodeGenerator.generateCustomizedCodeBytes(InvokerBytecodeGenerator.java:520)
+TRACE 300648:
+	oracle.jrockit.jfr.NativeEventControl.setEnabled(NativeEventControl.java:87)
+	oracle.jrockit.jfr.NativeEventControl.apply(NativeEventControl.java:53)
+	oracle.jrockit.jfr.Settings.update(Settings.java:89)
+	oracle.jrockit.jfr.Settings.addEvents(Settings.java:67)
+TRACE 301027:
+	jdk.internal.org.objectweb.asm.ByteVector.put12(ByteVector.java:173)
+	jdk.internal.org.objectweb.asm.ClassWriter.newClassItem(ClassWriter.java:1142)
+	jdk.internal.org.objectweb.asm.MethodWriter.visitTypeInsn(MethodWriter.java:855)
+	java.lang.invoke.InvokerBytecodeGenerator.emitImplicitConversion(InvokerBytecodeGenerator.java:435)
+TRACE 300917:
+	jdk.internal.org.objectweb.asm.tree.MethodNode.visitTypeInsn(MethodNode.java:466)
+	jdk.internal.org.objectweb.asm.ClassReader.readCode(ClassReader.java:1473)
+	jdk.internal.org.objectweb.asm.ClassReader.readMethod(ClassReader.java:1046)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:722)
+TRACE 300850:
+	jdk.internal.org.objectweb.asm.ClassReader.readUnsignedShort(ClassReader.java:2340)
+	jdk.internal.org.objectweb.asm.ClassReader.readField(ClassReader.java:763)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:718)
+	jdk.internal.org.objectweb.asm.ClassReader.accept(ClassReader.java:535)
+TRACE 300083:
+	sun.misc.URLClassPath$3.run(URLClassPath.java:366)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:356)
+	java.security.AccessController.doPrivileged(AccessController.java:Unknown line)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:355)
+TRACE 301032:
+	java.lang.invoke.LambdaForm.basicType(LambdaForm.java:1253)
+	java.lang.invoke.LambdaForm$NamedFunction.parameterType(LambdaForm.java:1232)
+	java.lang.invoke.InvokerBytecodeGenerator.emitPushArgument(InvokerBytecodeGenerator.java:873)
+	java.lang.invoke.InvokerBytecodeGenerator.emitStaticInvoke(InvokerBytecodeGenerator.java:658)
+TRACE 301155:
+	java.lang.String.toLowerCase(String.java:2634)
+	java.security.Provider.parseLegacyPut(Provider.java:948)
+	java.security.Provider.ensureLegacyParsed(Provider.java:909)
+	java.security.Provider.getServices(Provider.java:1076)
+TRACE 300014:
+	java.util.Timer.<init>(Timer.java:101)
+	oracle.jrockit.jfr.JFRImpl.<init>(JFRImpl.java:76)
+	oracle.jrockit.jfr.VMJFR.<init>(VMJFR.java:55)
+	oracle.jrockit.jfr.VMJFR.create(VMJFR.java:393)
+TRACE 301034:
+	java.lang.invoke.MemberName.getMethodType(MemberName.java:136)
+	java.lang.invoke.MemberName.getMethodOrFieldType(MemberName.java:110)
+	java.lang.invoke.MemberName.getInvocationType(MemberName.java:164)
+	java.lang.invoke.LambdaForm$NamedFunction.methodType(LambdaForm.java:1206)
+TRACE 300285:
+	java.lang.reflect.Proxy$ProxyClassFactory.apply(Proxy.java:569)
+	java.lang.reflect.Proxy$ProxyClassFactory.apply(Proxy.java:557)
+	java.lang.reflect.WeakCache$Factory.get(WeakCache.java:230)
+	java.lang.reflect.WeakCache.get(WeakCache.java:127)
+TRACE 300653:
+	sun.misc.ProxyGenerator$ConstantPool.getFieldRef(ProxyGenerator.java:1782)
+	sun.misc.ProxyGenerator$ProxyMethod.generateMethod(ProxyGenerator.java:916)
+	sun.misc.ProxyGenerator$ProxyMethod.access$100(ProxyGenerator.java:872)
+	sun.misc.ProxyGenerator.generateClassFile(ProxyGenerator.java:480)
+TRACE 300801:
+	com.sun.org.apache.bcel.internal.generic.MethodGen.getLocalVariableTable(MethodGen.java:415)
+	com.sun.org.apache.bcel.internal.generic.MethodGen.getMethod(MethodGen.java:644)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateConstructor(EventHandlerCreator.java:269)
+	oracle.jrockit.jfr.events.EventHandlerCreator.generateBytes(EventHandlerCreator.java:194)
+TRACE 300857:
+	java.lang.String.toLowerCase(String.java:2558)
+	java.lang.String.toLowerCase(String.java:2657)
+	sun.net.util.URLUtil.urlNoFragString(URLUtil.java:53)
+	sun.net.www.protocol.jar.JarFileFactory.getCachedJarFile(JarFileFactory.java:122)
+TRACE 300114:
+	java.util.zip.Inflater.initIDs(Inflater.java:Unknown line)
+	java.util.zip.Inflater.<clinit>(Inflater.java:88)
+	java.util.zip.ZipFile.getInflater(ZipFile.java:455)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:374)
+TRACE 300610:
+	com.sun.org.apache.xerces.internal.util.XMLChar.isContent(XMLChar.java:811)
+	com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.scanContent(XMLEntityScanner.java:990)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:2819)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:606)
+TRACE 300611:
+	com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.scanLiteral(XMLEntityScanner.java:1069)
+	com.sun.org.apache.xerces.internal.impl.XMLScanner.scanAttributeValue(XMLScanner.java:835)
+	com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.scanAttribute(XMLNSDocumentScannerImpl.java:439)
+	com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.scanStartElement(XMLNSDocumentScannerImpl.java:255)
+TRACE 300612:
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.handleEndElement(XMLSchemaValidator.java:2146)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.endElement(XMLSchemaValidator.java:859)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanEndElement(XMLDocumentFragmentScannerImpl.java:1782)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:2973)
+TRACE 300658:
+	java.lang.Class.getDeclaredFields0(Class.java:Unknown line)
+	java.lang.Class.privateGetDeclaredFields(Class.java:2575)
+	java.lang.Class.getDeclaredFields(Class.java:1908)
+	oracle.jrockit.jfr.events.DataStructureDescriptor.<init>(DataStructureDescriptor.java:28)
+TRACE 301166:
+	java.util.Locale.equals(Locale.java:2000)
+	java.util.Formatter.getZero(Formatter.java:2282)
+	java.util.Formatter.<init>(Formatter.java:1892)
+	java.util.Formatter.<init>(Formatter.java:1914)
+TRACE 300613:
+	java.util.Vector.isEmpty(Vector.java:326)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator$ValueStoreCache.endElement(XMLSchemaValidator.java:4059)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.handleEndElement(XMLSchemaValidator.java:2201)
+	com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.endElement(XMLSchemaValidator.java:859)
+TRACE 301045:
+	java.lang.System.getSecurityManager(System.java:334)
+	sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:303)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	sun.invoke.util.BytecodeDescriptor.parseSig(BytecodeDescriptor.java:83)
+TRACE 300932:
+	sun.reflect.annotation.AnnotationSupport.<clinit>(AnnotationSupport.java:40)
+	java.lang.Class.getAnnotationsByType(Class.java:3429)
+	oracle.jrockit.jfr.JIClassInstrumentation.instrument(JIClassInstrumentation.java:111)
+	oracle.jrockit.jfr.JIClassInstrumentation.<init>(JIClassInstrumentation.java:62)
+CPU SAMPLES BEGIN (total = 131) Fri Mar 16 11:14:52 2018
+rank   self  accum   count trace method
+   1  3.05%  3.05%       4 300945 oracle.jrockit.jfr.VMJFR.retransformClasses0
+   2  2.29%  5.34%       3 301120 oracle.jrockit.jfr.VMJFR.stop
+   3  1.53%  6.87%       2 300956 jdk.internal.org.objectweb.asm.Frame.merge
+   4  1.53%  8.40%       2 300001 java.lang.ClassLoader.findBootstrapClass
+   5  0.76%  9.16%       1 300035 java.io.BufferedInputStream.getBufIfOpen
+   6  0.76%  9.92%       1 300615 java.lang.String.startsWith
+   7  0.76% 10.69%       1 300137 java.util.zip.Inflater.reset
+   8  0.76% 11.45%       1 300936 java.util.Arrays.copyOfRange
+   9  0.76% 12.21%       1 300937 jdk.internal.org.objectweb.asm.Frame.execute
+  10  0.76% 12.98%       1 301052 sun.misc.Unsafe.defineAnonymousClass
+  11  0.76% 13.74%       1 300938 oracle.jrockit.jfr.NativeLogger.output0
+  12  0.76% 14.50%       1 300581 com.sun.org.apache.xerces.internal.parsers.XML11Configuration.addRecognizedParamsAndSetDefaults
+  13  0.76% 15.27%       1 300940 jdk.internal.org.objectweb.asm.ClassReader.readUnsignedShort
+  14  0.76% 16.03%       1 300213 java.util.Formatter.getZero
+  15  0.76% 16.79%       1 300501 java.util.Properties.load0
+  16  0.76% 17.56%       1 300943 jdk.internal.org.objectweb.asm.ClassReader.readCode
+  17  0.76% 18.32%       1 300944 java.util.AbstractMap.toString
+  18  0.76% 19.08%       1 300946 jdk.internal.org.objectweb.asm.tree.AbstractInsnNode.<init>
+  19  0.76% 19.85%       1 300666 com.sun.org.apache.bcel.internal.generic.BasicType.<init>
+  20  0.76% 20.61%       1 300948 jdk.internal.org.objectweb.asm.ClassReader.readCode
+  21  0.76% 21.37%       1 300949 jdk.internal.org.objectweb.asm.commons.SimpleRemapper.map
+  22  0.76% 22.14%       1 301065 java.lang.invoke.InvokerBytecodeGenerator.emitStaticInvoke
+  23  0.76% 22.90%       1 300950 jdk.internal.org.objectweb.asm.tree.InsnList.add
+  24  0.76% 23.66%       1 300951 jdk.internal.org.objectweb.asm.ClassReader.readCode
+  25  0.76% 24.43%       1 300952 jdk.internal.org.objectweb.asm.ByteVector.putUTF8
+  26  0.76% 25.19%       1 300953 jdk.internal.org.objectweb.asm.ByteVector.enlarge
+  27  0.76% 25.95%       1 300954 java.lang.String.toCharArray
+  28  0.76% 26.72%       1 300955 jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.remap
+  29  0.76% 27.48%       1 300957 jdk.internal.org.objectweb.asm.MethodWriter.visitLineNumber
+  30  0.76% 28.24%       1 300958 jdk.internal.org.objectweb.asm.tree.AbstractInsnNode.acceptAnnotations
+  31  0.76% 29.01%       1 300959 java.util.Arrays.copyOf
+  32  0.76% 29.77%       1 300871 java.lang.System.arraycopy
+  33  0.76% 30.53%       1 301077 java.util.stream.ForEachOps$ForEachTask.compute
+  34  0.76% 31.30%       1 300961 jdk.internal.org.objectweb.asm.ClassReader.readCode
+  35  0.76% 32.06%       1 300962 java.lang.Object.<init>
+  36  0.76% 32.82%       1 300963 jdk.internal.org.objectweb.asm.commons.LocalVariablesSorter.visitFrame
+  37  0.76% 33.59%       1 300527 com.sun.org.apache.xerces.internal.utils.XMLSecurityManager.isOverLimit
+  38  0.76% 34.35%       1 300965 jdk.internal.org.objectweb.asm.ClassReader.readUnsignedShort
+  39  0.76% 35.11%       1 300966 jdk.internal.org.objectweb.asm.Frame.merge
+  40  0.76% 35.88%       1 300967 jdk.internal.org.objectweb.asm.MethodWriter.addSuccessor
+  41  0.76% 36.64%       1 300968 jdk.internal.org.objectweb.asm.Frame.merge
+  42  0.76% 37.40%       1 300969 java.lang.System.arraycopy
+  43  0.76% 38.17%       1 300970 jdk.internal.org.objectweb.asm.Frame.merge
+  44  0.76% 38.93%       1 300971 jdk.internal.org.objectweb.asm.tree.VarInsnNode.accept
+  45  0.76% 39.69%       1 300972 java.lang.String.<init>
+  46  0.76% 40.46%       1 300973 jdk.internal.org.objectweb.asm.Frame.merge
+  47  0.76% 41.22%       1 300873 java.lang.String.hashCode
+  48  0.76% 41.98%       1 300621 java.lang.String.charAt
+  49  0.76% 42.75%       1 300875 oracle.jrockit.jfr.events.EventHandlerCreator.generateConstructor
+  50  0.76% 43.51%       1 300876 oracle.jrockit.jfr.VMJFR.redefineClass0
+  51  0.76% 44.27%       1 300412 com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.<init>
+  52  0.76% 45.04%       1 300162 java.util.jar.JarFile.match
+  53  0.76% 45.80%       1 300181 java.util.Currency$1.run
+  54  0.76% 46.56%       1 301098 java.net.NetworkInterface.getMacAddr0
+  55  0.76% 47.33%       1 300981 sun.util.locale.provider.LocaleResources.getTimeZoneNames
+  56  0.76% 48.09%       1 300820 com.sun.org.apache.bcel.internal.classfile.JavaClass.<init>
+  57  0.76% 48.85%       1 300354 sun.net.www.protocol.jar.URLJarFile.getEntry
+  58  0.76% 49.62%       1 300374 com.sun.org.apache.xerces.internal.impl.XMLEntityManager.setScannerVersion
+  59  0.76% 50.38%       1 300336 java.io.BufferedReader.read
+  60  0.76% 51.15%       1 300986 oracle.jrockit.jfr.VMJFR.start
+  61  0.76% 51.91%       1 300987 sun.misc.Unsafe.putByte
+  62  0.76% 52.67%       1 301106 java.util.EnumSet.noneOf
+  63  0.76% 53.44%       1 300396 com.sun.org.apache.xerces.internal.impl.xs.traversers.XSDHandler.<init>
+  64  0.76% 54.20%       1 300509 com.sun.org.apache.xerces.internal.impl.xs.traversers.XSDHandler.parseSchema
+  65  0.76% 54.96%       1 300886 java.io.ByteArrayOutputStream.write
+  66  0.76% 55.73%       1 300337 java.io.CharArrayWriter.write
+  67  0.76% 56.49%       1 300888 com.sun.org.apache.bcel.internal.generic.MethodGen.getMaxStack
+  68  0.76% 57.25%       1 300631 java.lang.String.<init>
+  69  0.76% 58.02%       1 300890 sun.reflect.Reflection.getCallerClass
+  70  0.76% 58.78%       1 300632 java.lang.System.arraycopy
+  71  0.76% 59.54%       1 300633 java.lang.StringBuilder.<init>
+  72  0.76% 60.31%       1 300893 sun.misc.ProxyGenerator$ConstantPool$IndirectEntry.hashCode
+  73  0.76% 61.07%       1 300634 java.lang.System.arraycopy
+  74  0.76% 61.83%       1 300999 java.lang.invoke.LambdaForm$NamedFunction.<init>
+  75  0.76% 62.60%       1 301119 java.util.IdentityHashMap$KeySet.iterator
+  76  0.76% 63.36%       1 300779 com.sun.org.apache.bcel.internal.generic.InstructionConstants.<clinit>
+  77  0.76% 64.12%       1 300564 com.sun.org.apache.xerces.internal.impl.dv.xs.XSSimpleTypeDecl.normalize
+  78  0.76% 64.89%       1 300537 com.sun.org.apache.xerces.internal.util.SymbolHash.put
+  79  0.76% 65.65%       1 300338 java.io.BufferedReader.read
+  80  0.76% 66.41%       1 300899 java.lang.String.equals
+  81  0.76% 67.18%       1 301005 java.lang.invoke.MethodHandles$Lookup.linkMethodHandleConstant
+  82  0.76% 67.94%       1 300900 java.io.DataOutputStream.writeUTF
+  83  0.76% 68.70%       1 300597 com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator$XPathMatcherStack.<init>
+  84  0.76% 69.47%       1 300836 sun.reflect.generics.parser.SignatureParser.current
+  85  0.76% 70.23%       1 300903 sun.util.calendar.CalendarUtils.isGregorianLeapYear
+  86  0.76% 70.99%       1 300837 java.lang.Class.getDeclaredConstructors0
+  87  0.76% 71.76%       1 300686 com.sun.org.apache.bcel.internal.generic.LocalVariableGen.notifyTargetChanging
+  88  0.76% 72.52%       1 300252 javax.management.ImmutableDescriptor.makeMap
+  89  0.76% 73.28%       1 300042 java.util.Calendar.createCalendar
+  90  0.76% 74.05%       1 300098 java.util.zip.ZipFile.open
+  91  0.76% 74.81%       1 300738 com.sun.org.apache.bcel.internal.generic.InstructionConstants.<clinit>
+  92  0.76% 75.57%       1 301016 sun.invoke.util.BytecodeDescriptor.parseSig
+  93  0.76% 76.34%       1 301017 java.lang.ClassLoader.findLoadedClass0
+  94  0.76% 77.10%       1 300570 java.lang.String.equals
+  95  0.76% 77.86%       1 300490 com.sun.org.apache.xerces.internal.impl.dv.xs.XSSimpleTypeDecl.<clinit>
+  96  0.76% 78.63%       1 300184 sun.util.locale.provider.NumberFormatProviderImpl.getInstance
+  97  0.76% 79.39%       1 301142 java.io.FileInputStream.readBytes
+  98  0.76% 80.15%       1 300645 java.net.URI.match
+  99  0.76% 80.92%       1 300646 java.lang.String.charAt
+ 100  0.76% 81.68%       1 300310 java.lang.Object.clone
+ 101  0.76% 82.44%       1 301024 jdk.internal.org.objectweb.asm.ByteVector.putShort
+ 102  0.76% 83.21%       1 301025 java.lang.Class.getModifiers
+ 103  0.76% 83.97%       1 300648 oracle.jrockit.jfr.NativeEventControl.setEnabled
+ 104  0.76% 84.73%       1 301027 jdk.internal.org.objectweb.asm.ByteVector.put12
+ 105  0.76% 85.50%       1 300917 jdk.internal.org.objectweb.asm.tree.MethodNode.visitTypeInsn
+ 106  0.76% 86.26%       1 300850 jdk.internal.org.objectweb.asm.ClassReader.readUnsignedShort
+ 107  0.76% 87.02%       1 300083 sun.misc.URLClassPath$3.run
+ 108  0.76% 87.79%       1 301032 java.lang.invoke.LambdaForm.basicType
+ 109  0.76% 88.55%       1 301155 java.lang.String.toLowerCase
+ 110  0.76% 89.31%       1 300014 java.util.Timer.<init>
+ 111  0.76% 90.08%       1 301034 java.lang.invoke.MemberName.getMethodType
+ 112  0.76% 90.84%       1 300285 java.lang.reflect.Proxy$ProxyClassFactory.apply
+ 113  0.76% 91.60%       1 300653 sun.misc.ProxyGenerator$ConstantPool.getFieldRef
+ 114  0.76% 92.37%       1 300801 com.sun.org.apache.bcel.internal.generic.MethodGen.getLocalVariableTable
+ 115  0.76% 93.13%       1 300857 java.lang.String.toLowerCase
+ 116  0.76% 93.89%       1 300114 java.util.zip.Inflater.initIDs
+ 117  0.76% 94.66%       1 300610 com.sun.org.apache.xerces.internal.util.XMLChar.isContent
+ 118  0.76% 95.42%       1 300611 com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.scanLiteral
+ 119  0.76% 96.18%       1 300612 com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.handleEndElement
+ 120  0.76% 96.95%       1 300658 java.lang.Class.getDeclaredFields0
+ 121  0.76% 97.71%       1 301166 java.util.Locale.equals
+ 122  0.76% 98.47%       1 300613 java.util.Vector.isEmpty
+ 123  0.76% 99.24%       1 301045 java.lang.System.getSecurityManager
+ 124  0.76% 100.00%       1 300932 sun.reflect.annotation.AnnotationSupport.<clinit>
+CPU SAMPLES END
