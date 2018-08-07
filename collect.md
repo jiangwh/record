@@ -1,3 +1,8 @@
-# collect the blog 
+# collect the awesome blog 
 
-https://github.com/xingshaocheng/architect-awesome
+<div>
+<a href="https://github.com/xingshaocheng/architect-awesome"> architect</a>
+<a href="https://github.com/binhnguyennus/awesome-scalability"> scalability</a>
+</div>
+
+
