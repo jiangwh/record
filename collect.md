@@ -6,6 +6,8 @@
 <a href="https://github.com/binhnguyennus/awesome-scalability"> scalability</a>
 
 <a href="https://www.thoughtworks.com/insights/blog/demystifying-conways-law">conways's law </a>
+
+<a href="https://martinfowler.com/">martinfowler</a>
 </div>
 
 

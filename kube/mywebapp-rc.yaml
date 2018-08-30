@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: mywebapp
+spec:
+  replicas: 2
+  selector:
+    app: mywebapp
+  template:
+    metadata:
+      labels:
+        app: mywebapp
+    spec:
+      containers:
+      - name: mywebapp
+        imagePullPolicy: IfNotPresent
+        image: myweb
+        ports:
+        - containerPort: 8080
+        
