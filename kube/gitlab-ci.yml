@@ -1,0 +1,19 @@
+LinkID_job:
+  stage: test
+  except:
+    - master
+  script:
+    - cd  rg-linkid/rg-linkid
+    - mvn --batch-mode verify sonar:sonar -Dsonar.host.url=http://192.168.54.240:9000 -Dsonar.login=admin -Dsonar.password=admin -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
+    - cp  /opt/12.py  rg-linkid-bootstrap/target/jacoco-ut/
+    - cd  rg-linkid-bootstrap/target/jacoco-ut
+    - python3 12.py
+
+sonarqube_preview_feature_job:
+  stage: test
+  only:
+    - /^feature\/*/
+  script:
+    - git checkout origin/master
+    - git merge $CI_COMMIT_SHA --no-commit --no-ff
+    - mvn --batch-mode verify sonar:sonar -Dsonar.host.url=http://192.168.54.240:9000 -Dsonar.login=admin -Dsonar.password=admin -Dsonar.analysis.mode=preview -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
