@@ -1,13 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>common</artifactId>
+	<artifactId>record</artifactId>
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>com.ruijie.ykt</groupId>
-		<artifactId>ykt</artifactId>
-		<version>1.0.0</version>
+		<groupId>com.jiangwh</groupId>
+		<artifactId>blog</artifactId>
+		<version>1.0</version>
 	</parent>
 
 	<dependencies>
@@ -56,7 +57,10 @@
 			<version>2.0.4</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+		</dependency>
 
 	</dependencies>
 	<build>

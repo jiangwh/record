@@ -21,6 +21,10 @@ import javax.net.ssl.X509TrustManager;
 
 public class GetCer {
 	
+	public static void main(String[] args) {
+		System.out.println(GetCer.class.isInstance(new GetCer()));
+		System.out.println(new GetCer() instanceof GetCer);
+	}
 	public static KeyStore getKeyStore(String host, int dport) throws KeyStoreException, NoSuchAlgorithmException,
 			KeyManagementException, CertificateException, IOException {
 

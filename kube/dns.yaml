@@ -1,0 +1,93 @@
+# 增加etcd配置 
+# etcdctl mk /skydns/config '{"dns-addr":"10.254.10.2:53","ttl":3600,"domain":"sky."}'
+
+# 修改kubectl配置,工作节点需要dns
+# vi /etc/kubernetes/kubelet 
+# KUBELET_ARGS="--cluster-dns=10.254.10.2 --cluster-domain=sky --allow-privileged=true"
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kube-dns
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: kube-dns
+        tier: platform
+        subsystem: unconfirmed
+        k8s-app: kube-dns
+        version: v9
+        partition: "no"
+        kubernetes.io/cluster-service: "true"
+    spec:
+      containers:
+      - name: kube2sky
+      #填写你自己的镜像名称
+#        image: gcr.io/google_containers/kube2sky:1.11
+        image: docker.io/kubernetes/kube2sky 
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        args:
+        # 同etcd中配置的/skydns/config中的domain名
+        - -domain=sky
+        # master地址
+        - --kube_master_url=http://172.17.8.110:8080
+        # etcd地址
+        - -etcd-server=http://172.17.8.110:2379
+      - name: skydns
+        #你的镜像名称
+#        image: gcr.io/google_containers/skydns:2015-10-13-8c72f8c 
+        image: docker.io/skynetservices/skydns
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        args:
+        # command = "/skydns"
+        # etcd地址
+        - -machines=http://172.17.8.110:2379
+        - -addr=0.0.0.0:53
+        - -ns-rotate=false
+        #同etcd中配置的/skydns/config中的domain名，最后有‘点’
+        - -domain=sky.
+        ports:
+        - containerPort: 53
+          name: dns
+          protocol: UDP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+      dnsPolicy: Default  # Don't use cluster DNS.
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "KubeDNS"
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: 10.254.10.2
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+    
+# kubectl describe pod kube-dns-1243159469-36f57 --namespace kube-system
+# kubectl logs kube-dns-1243159469-36f57 -c sky2dns --namespace=kube-syste

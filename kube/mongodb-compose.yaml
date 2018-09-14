@@ -1,0 +1,24 @@
+version: '2'
+services:
+  rs1:
+    image: docker.io/mongo
+    volumes:
+      - /var/db/mongodb/rs1:/data/db
+    command: mongod --dbpath /data/db --replSet mongoset
+  rs2:
+    image: docker.io/mongo
+    volumes:
+      - /var/db/mongodb/rs2:/data/db
+    command: mongod --dbpath /data/db --replSet mongoset
+  rs3:
+    image: docker.io/mongo
+    volumes:
+      - /var/db/mongodb/rs3:/data/db
+    command: mongod --dbpath /data/db --replSet mongoset
+
+# docker-compose exec rs1 mongo    
+# rs.initiate()
+# rs.add('rs2:27017')
+# rs.add('rs3:27017')
+# slave node
+# rs.slaveOk()
